@@ -22,6 +22,7 @@ class BackgroundImageMode(enum.Enum):
     TILE = 1  #: Full size, undistorted, and tessellated if needed.
     ASPECT_FILL = 2  #: Scale to fill the space, cropping if needed. Does not distort.
     ASPECT_FIT = 3  #: Scale to fit the space, adding letterboxes or pillarboxes if needed. Does not distort.
+    MATCH_DESKTOP_BACKGROUND = 4  #: Matches the desktop background in the window area.
 
     def toJSON(self):
         return json.dumps(self.value)

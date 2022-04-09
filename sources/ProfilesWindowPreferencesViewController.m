@@ -154,6 +154,17 @@ CGFloat iTermMaxBlurRadius(void) {
                 }
                 break;
             }
+            case iTermBackgroundImageModeMatchDesktopBackground: {
+                self->_backgroundImagePreview.imageScaling = NSImageScaleNone;
+                NSString *filename = self.backgroundImageFilename;
+                if (filename) {
+                    NSImage *anImage = [[NSImage alloc] initWithContentsOfFile:filename];
+                    strongSelf->_backgroundImagePreview.image = [anImage it_imageFillingSize:strongSelf->_backgroundImagePreview.frame.size];
+                    self->_backgroundImagePreview.imageScaling = NSImageScaleNone;
+                    self.backgroundImageFilename = filename;
+                }
+                break;
+            }
         }
     };
 

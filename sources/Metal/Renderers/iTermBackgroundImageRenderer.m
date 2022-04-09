@@ -337,6 +337,28 @@ NS_ASSUME_NONNULL_BEGIN
                                       frame.size.height * globalTextureFrame.size.height);
             break;
         }
+
+        case iTermBackgroundImageModeMatchDesktopBackground: {
+            CGRect globalTextureFrame;
+            if (imageAspectRatio > containerAspectRatio) {
+                // Image is wide relative to view.
+                // Crop left and right.
+                const CGFloat width = nativeTextureSize.height * containerAspectRatio;
+                const CGFloat crop = (nativeTextureSize.width - width) / 2.0;
+                globalTextureFrame = CGRectMake(crop, 0, width, nativeTextureSize.height);
+            } else {
+                // Image is tall relative to view.
+                // Crop top and bottom.
+                const CGFloat height = nativeTextureSize.width / containerAspectRatio;
+                const CGFloat crop = (nativeTextureSize.height - height) / 2.0;
+                globalTextureFrame = CGRectMake(0, crop, nativeTextureSize.width, height);
+            }
+            textureFrame = CGRectMake(frame.origin.x * globalTextureFrame.size.width + globalTextureFrame.origin.x,
+                                      frame.origin.y * globalTextureFrame.size.height + globalTextureFrame.origin.y,
+                                      frame.size.width * globalTextureFrame.size.width,
+                                      frame.size.height * globalTextureFrame.size.height);
+            break;
+        }
     }
 
     // Convert textureFrame to normalized coordinates

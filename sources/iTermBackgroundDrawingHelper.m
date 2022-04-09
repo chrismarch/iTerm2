@@ -169,6 +169,13 @@ typedef struct {
                     result.boxes[i] = [view convertRect:result.boxes[i] fromView:containerView];
                 }
                 break;
+                
+            case iTermBackgroundImageModeMatchDesktopBackground:
+                image = backgroundImage;
+                sourceRect = [self scaleAspectFillSourceRectForImageSize:image.image.size
+                                                             contentRect:windowVisibleAreaRect
+                                                         destinationRect:dirtyRectInAdjustedContainerCoords];
+                break;
         }
         result.image = image;
         result.imageDestinationRect = drawRect;

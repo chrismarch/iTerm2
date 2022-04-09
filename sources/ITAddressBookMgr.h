@@ -389,7 +389,8 @@ typedef NS_ENUM(NSUInteger, iTermBackgroundImageMode) {
     iTermBackgroundImageModeStretch = 0,
     iTermBackgroundImageModeTile = 1,
     iTermBackgroundImageModeScaleAspectFill = 2,
-    iTermBackgroundImageModeScaleAspectFit = 3
+    iTermBackgroundImageModeScaleAspectFit = 3,
+    iTermBackgroundImageModeMatchDesktopBackground = 4
 };
 
 typedef NS_OPTIONS(NSUInteger, iTermTitleComponents) {

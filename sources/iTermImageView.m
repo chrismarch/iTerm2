@@ -242,6 +242,11 @@
             [self loadRegularImage];
             self.layer.contentsGravity = kCAGravityResizeAspectFill;
             return;
+            
+        case iTermBackgroundImageModeMatchDesktopBackground:
+            [self loadRegularImage];
+            self.layer.contentsGravity = kCAGravityResizeAspectFill;
+            return;
     }
 }
 

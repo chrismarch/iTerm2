@@ -3330,6 +3330,7 @@ DQ
                                 <menuItem title="Tile" tag="1" id="dDL-md-i3w"/>
                                 <menuItem title="Scale to Fill" tag="2" id="4Qt-SM-LZH"/>
                                 <menuItem title="Scale to Fit" tag="3" id="b9n-62-qE3"/>
+                                <menuItem title="Match Desktop" tag="4" id="stI-5v-v9C"/>
                             </items>
                         </menu>
                     </popUpButtonCell>
