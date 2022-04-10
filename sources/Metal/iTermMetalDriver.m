@@ -88,6 +88,8 @@ typedef struct {
 #endif
     CGFloat maximumExtendedDynamicRangeColorComponentValue NS_AVAILABLE_MAC(10_15);
     CGFloat legacyScrollbarWidth;
+    NSRect screenFrame;
+    NSRect viewFrameInScreenCoords;
 } iTermMetalDriverMainThreadState;
 
 @interface iTermMetalDriver()
@@ -515,6 +517,11 @@ legacyScrollbarWidth:(unsigned int)legacyScrollbarWidth {
 #endif  // ENABLE_UNFAMILIAR_TEXTURE_WORKAROUND
 #endif  // ENABLE_PRIVATE_QUEUE
 
+    NSRect frameInWindowCoordinates = [view convertRect:view.frame toView:nil];
+    NSRect frameInScreenCoordinates = [view.window convertRectToScreen:frameInWindowCoordinates];
+    self.mainThreadState->viewFrameInScreenCoords = frameInScreenCoordinates;
+    self.mainThreadState->screenFrame = view.window.screen.frame;
+    
     @synchronized(self) {
         [_currentFrames addObject:frameData];
     }
@@ -584,6 +591,9 @@ legacyScrollbarWidth:(unsigned int)legacyScrollbarWidth {
         if (@available(macOS 10.15, *)) {
             frameData.maximumExtendedDynamicRangeColorComponentValue = self.mainThreadState->maximumExtendedDynamicRangeColorComponentValue;
         }
+        
+        frameData.screenFrame = self.mainThreadState->screenFrame;
+        frameData.viewFrameInScreenCoords = self.mainThreadState->viewFrameInScreenCoords;
     }];
     return frameData;
 }

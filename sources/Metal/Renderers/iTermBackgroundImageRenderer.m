@@ -153,7 +153,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)drawWithFrameData:(iTermMetalFrameData *)frameData
            transientState:(__kindof iTermMetalRendererTransientState *)transientState {
     iTermBackgroundImageRendererTransientState *tState = transientState;
-    [self loadVertexBuffer:tState];
+    [self loadVertexBuffer:tState
+                 frameData:frameData];
     
     NSDictionary *fragmentBuffers = nil;
 #if ENABLE_TRANSPARENT_METAL_WINDOWS
@@ -340,23 +341,34 @@ NS_ASSUME_NONNULL_BEGIN
 
         case iTermBackgroundImageModeMatchDesktopBackground: {
             CGRect globalTextureFrame;
-            if (imageAspectRatio > containerAspectRatio) {
-                // Image is wide relative to view.
+            NSRect screenRect = frameData.screenFrame;
+            const CGFloat screenAspectRatio = screenRect.size.width / screenRect.size.height;
+            // TODO cmarch assuming aspect fill desktop background
+            if (imageAspectRatio > screenAspectRatio) {
+                // Image is wide relative to screen.
                 // Crop left and right.
-                const CGFloat width = nativeTextureSize.height * containerAspectRatio;
+                const CGFloat width = nativeTextureSize.height * screenAspectRatio;
                 const CGFloat crop = (nativeTextureSize.width - width) / 2.0;
                 globalTextureFrame = CGRectMake(crop, 0, width, nativeTextureSize.height);
             } else {
-                // Image is tall relative to view.
+                // Image is tall relative to screen.
                 // Crop top and bottom.
-                const CGFloat height = nativeTextureSize.width / containerAspectRatio;
+                const CGFloat height = nativeTextureSize.width / screenAspectRatio;
                 const CGFloat crop = (nativeTextureSize.height - height) / 2.0;
                 globalTextureFrame = CGRectMake(0, crop, nativeTextureSize.width, height);
             }
-            textureFrame = CGRectMake(frame.origin.x * globalTextureFrame.size.width + globalTextureFrame.origin.x,
-                                      frame.origin.y * globalTextureFrame.size.height + globalTextureFrame.origin.y,
-                                      frame.size.width * globalTextureFrame.size.width,
-                                      frame.size.height * globalTextureFrame.size.height);
+            
+            NSRect frameRelativeToScreen = frameData.viewFrameInScreenCoords;
+            CGRect frameRSN = CGRectMake(frameRelativeToScreen.origin.x / screenRect.size.width,
+                                         frameRelativeToScreen.origin.y / screenRect.size.height,
+                                         frameRelativeToScreen.size.width / screenRect.size.width,
+                                         frameRelativeToScreen.size.height / screenRect.size.height);
+ 
+            textureFrame = CGRectMake(frameRSN.origin.x * globalTextureFrame.size.width + globalTextureFrame.origin.x,
+                                      frameRSN.origin.y * globalTextureFrame.size.height + globalTextureFrame.origin.y,
+                                      frameRSN.size.width * globalTextureFrame.size.width,
+                                      frameRSN.size.height * globalTextureFrame.size.height);
+  
             break;
         }
     }
