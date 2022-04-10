@@ -57,7 +57,7 @@
     iTermInternalImageView *_lowerView;
 
     // This is used when the window is opaque. It provides a color behind the image in case the
-    // image has transparent portions. When thew indow is transparent we hide it an let the
+    // image has transparent portions. When the window is transparent we hide it an let the
     // desktop show through.
     iTermImageBackgroundColorView *_backgroundColorView;
 }
