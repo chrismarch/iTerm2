@@ -235,7 +235,7 @@ NS_ASSUME_NONNULL_BEGIN
     tState.containerFrame = _containerFrame;
 }
 
-- (void)loadVertexBuffer:(iTermBackgroundImageRendererTransientState *)tState {
+- (void)loadVertexBuffer:(iTermBackgroundImageRendererTransientState *)tState
                frameData:(iTermMetalFrameData *)frameData {
     const CGFloat scale = tState.configuration.scale;
     const CGSize nativeTextureSize = NSMakeSize(tState.imageSize.width * tState.imageScale,
