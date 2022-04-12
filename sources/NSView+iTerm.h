@@ -18,6 +18,9 @@
 + (BOOL)iterm_takingSnapshot;
 + (NSView *)viewAtScreenCoordinate:(NSPoint)point;
 
+- (NSRect)frameInScreenCoordinates;
+- (CGRect)contentsRectToMatchDesktopBackground:(CGSize) nativeTextureSize;
+
 // Returns an image representation of the view's current appearance.
 - (NSImage *)snapshot;
 // Rect is in the coordinate frame of self, so self.bounds would be the whole thing.

@@ -37,6 +37,7 @@
 #import "NSArray+iTerm.h"
 #import "NSColor+iTerm.h"
 #import "NSMutableData+iTerm.h"
+#import "NSView+iTerm.h"
 #import <stdatomic.h>
 
 @interface iTermMetalDriverAsyncContext : NSObject
@@ -517,9 +518,8 @@ legacyScrollbarWidth:(unsigned int)legacyScrollbarWidth {
 #endif  // ENABLE_UNFAMILIAR_TEXTURE_WORKAROUND
 #endif  // ENABLE_PRIVATE_QUEUE
 
-    NSRect frameInWindowCoordinates = [view convertRect:view.frame toView:nil];
-    NSRect frameInScreenCoordinates = [view.window convertRectToScreen:frameInWindowCoordinates];
-    self.mainThreadState->viewFrameInScreenCoords = frameInScreenCoordinates;
+    NSRect viewFrameInScreenCoords = [view frameInScreenCoordinates];
+    self.mainThreadState->viewFrameInScreenCoords = viewFrameInScreenCoords;
     self.mainThreadState->screenFrame = view.window.screen.frame;
     
     @synchronized(self) {

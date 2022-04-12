@@ -11,6 +11,7 @@
 #import "iTermMalloc.h"
 #import "NSArray+iTerm.h"
 #import "NSImage+iTerm.h"
+#import "NSView+iTerm.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -158,6 +159,10 @@
                                                  selector:@selector(windowDidChangeScreen:)
                                                      name:NSWindowDidChangeScreenNotification
                                                    object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(windowDidMove:)
+                                                     name:NSWindowDidMoveNotification
+                                                   object:nil];
     }
     return self;
 }
@@ -245,9 +250,26 @@
             
         case iTermBackgroundImageModeMatchDesktopBackground:
             [self loadRegularImage];
-            self.layer.contentsGravity = kCAGravityResizeAspectFill;
+            self.layer.contentsGravity = kCAGravityResize;
             return;
     }
+    [self updateContentsRect];
+}
+
+- (void)updateContentsRect {
+    switch (_contentMode) {
+        default:
+            self.layer.contentsRect = CGRectMake(0, 0, 1, 1);
+            return;
+            
+        case iTermBackgroundImageModeMatchDesktopBackground:
+            [self loadRegularImage];
+            CGFloat scale = self.window.screen.backingScaleFactor;
+            CGSize nativeTextureSize = CGSizeMake(_image.image.size.width * scale, _image.image.size.height * scale);
+            self.layer.contentsRect = [self contentsRectToMatchDesktopBackground:nativeTextureSize];
+            return;
+    }
+
 }
 
 // Loads a non-tiled image.
@@ -273,6 +295,15 @@
 - (void)windowDidChangeScreen:(NSNotification *)notification {
     // The scale may have changed which affects tiled images.
     [self update];
+}
+
+- (void)windowDidMove:(NSNotification *)notification {
+    [self updateContentsRect];
+}
+
+- (void)resizeWithOldSuperviewSize:(NSSize)oldSize; {
+    [super resizeWithOldSuperviewSize:oldSize];
+    [self updateContentsRect];
 }
 
 // Make a pattern color and set the layer's background color to that.

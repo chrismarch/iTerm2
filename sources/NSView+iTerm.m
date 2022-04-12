@@ -46,6 +46,53 @@ static NSInteger gTakingSnapshot;
     return nil;
 }
 
+- (NSRect)frameInScreenCoordinates {
+    NSRect viewFrameInWindowCoords = [self convertRect:self.frame toView:nil];
+    // TODO chrismarch check for convertRectToScreen if min os version of iTerm is less than convertRectToScreen min os version
+    NSRect viewFrameInScreenCoords = [self.window convertRectToScreen:viewFrameInWindowCoords];
+    return viewFrameInScreenCoords;
+}
+
+- (CGRect)contentsRectToMatchDesktopBackground:(CGSize) nativeTextureSize {
+    CGRect globalTextureFrame;
+    NSRect screenRect = self.window.screen.frame;
+    const CGFloat imageAspectRatio = nativeTextureSize.width / nativeTextureSize.height;
+
+    const CGFloat screenAspectRatio = screenRect.size.width / screenRect.size.height;
+    // TODO chrismarch assuming aspect fill desktop background
+    if (imageAspectRatio > screenAspectRatio) {
+        // Image is wide relative to screen.
+        // Crop left and right.
+        const CGFloat width = nativeTextureSize.height * screenAspectRatio;
+        const CGFloat crop = (nativeTextureSize.width - width) / 2.0;
+        globalTextureFrame = CGRectMake(crop, 0, width, nativeTextureSize.height);
+    } else {
+        // Image is tall relative to screen.
+        // Crop top and bottom.
+        const CGFloat height = nativeTextureSize.width / screenAspectRatio;
+        const CGFloat crop = (nativeTextureSize.height - height) / 2.0;
+        globalTextureFrame = CGRectMake(0, crop, nativeTextureSize.width, height);
+    }
+    
+    NSRect frameRelativeToScreen = [self frameInScreenCoordinates];
+    CGRect frameRSN = CGRectMake(frameRelativeToScreen.origin.x / screenRect.size.width,
+                                 frameRelativeToScreen.origin.y / screenRect.size.height,
+                                 frameRelativeToScreen.size.width / screenRect.size.width,
+                                 frameRelativeToScreen.size.height / screenRect.size.height);
+
+    CGRect textureFrame = CGRectMake(frameRSN.origin.x * globalTextureFrame.size.width + globalTextureFrame.origin.x,
+                              frameRSN.origin.y * globalTextureFrame.size.height + globalTextureFrame.origin.y,
+                              frameRSN.size.width * globalTextureFrame.size.width,
+                              frameRSN.size.height * globalTextureFrame.size.height);
+    
+    textureFrame.origin.x /= nativeTextureSize.width;
+    textureFrame.size.width /= nativeTextureSize.width;
+    textureFrame.origin.y /= nativeTextureSize.height;
+    textureFrame.size.height /= nativeTextureSize.height;
+
+    return textureFrame;
+}
+
 - (NSImage *)snapshot {
     return [self snapshotOfRect:self.bounds];
 }
