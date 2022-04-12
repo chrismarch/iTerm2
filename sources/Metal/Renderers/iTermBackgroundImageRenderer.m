@@ -344,7 +344,7 @@ NS_ASSUME_NONNULL_BEGIN
             CGRect globalTextureFrame;
             NSRect screenRect = frameData.screenFrame;
             const CGFloat screenAspectRatio = screenRect.size.width / screenRect.size.height;
-            // TODO cmarch assuming aspect fill desktop background
+            // TODO chrismarch assuming aspect fill desktop background
             if (imageAspectRatio > screenAspectRatio) {
                 // Image is wide relative to screen.
                 // Crop left and right.
