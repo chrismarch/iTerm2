@@ -227,8 +227,22 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)initializeTransientState:(iTermBackgroundImageRendererTransientState *)tState {
     tState.texture = _texture;
     tState.mode = _mode;
+    /*
+    CGImageRef cgi = [_image cgimage];
+    size_t width = CGImageGetWidth(cgi);
+    size_t height = CGImageGetHeight(cgi);
+    
+    tState.imageSize = CGSizeMake(width, height); //_image.image.size;
+    tState.imageScale = 1;//[_image.image recommendedLayerContentsScale:tState.configuration.scale];
+     */
+    //NSImageRep *rep = [[_image.image representations] objectAtIndex:0];
+    NSSize imageSize = NSMakeSize(_texture.width, _texture.height);
+    tState.imageSize = imageSize;
+    tState.imageScale = 1;
+/*
     tState.imageSize = _image.image.size;
     tState.imageScale = [_image.image recommendedLayerContentsScale:tState.configuration.scale];
+*/
     tState.repeat = (_mode == iTermBackgroundImageModeTile);
     tState.frame = _frame;
     tState.defaultBackgroundColor = _color;

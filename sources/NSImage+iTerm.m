@@ -394,7 +394,7 @@
         return nil;
     }
     for (NSImageRep *rep in self.representations) {
-        const double scale = best.pixelsWide / width;
+        const double scale = rep.pixelsWide / width;
         if (!best || fabs(desiredScale - scale) < fabs(desiredScale - bestScale)) {
             best = rep;
             bestScale = scale;
@@ -488,8 +488,8 @@
 
     return [NSImage imageOfSize:newSize drawBlock:^{
         [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
-        [self drawInRect:NSMakeRect(0, 0, newSize.width, newSize.height)
-                fromRect:NSMakeRect(0, 0, self.size.width, self.size.height)
+        [self drawInRect:NSZeroRect //NSMakeRect(0, 0, newSize.width, newSize.height)
+                fromRect:NSZeroRect
                operation:NSCompositingOperationCopy
                 fraction:1];
     }];
@@ -568,8 +568,8 @@ static NSBitmapImageRep * iTermCreateBitmapRep(NSSize size,
     return result;
 }
 
-- (NSBitmapImageRep *)it_bitmapImageRep {
-    CGImageRef cgImage = [[self bestRepresentationForScale:2] CGImageForProposedRect:nil context:nil hints:nil];
+- (NSBitmapImageRep *)it_bitmapImageRep:(CGFloat)desiredScale {
+    CGImageRef cgImage = [[self bestRepresentationForScale:desiredScale] CGImageForProposedRect:nil context:nil hints:nil];
     NSBitmapImageRep *bitmap = [[NSBitmapImageRep alloc] initWithCGImage:cgImage];
     return bitmap;
 }
@@ -586,7 +586,7 @@ static NSBitmapImageRep * iTermCreateBitmapRep(NSSize size,
 - (NSBitmapImageRep *)it_bitmapScaledTo:(NSSize)size {
     NSImage *image = [[NSImage alloc] initWithSize:self.size];
     [image addRepresentation:self];
-    return [[image it_imageOfSize:size] it_bitmapImageRep];
+    return [[image it_imageOfSize:size] it_bitmapImageRep:1];
 }
 
 // Assumes premultiplied alpha and little endian. Floating point must be 16 bit.

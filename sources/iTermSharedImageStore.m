@@ -137,7 +137,7 @@
         NSImage *image = unsafeImage;
         if (unsafeImage.size.height > 0 && unsafeImage.size.width > 0) {
             // Downscale to deal with issue 9346
-            const CGFloat maxSize = 5120;
+            const CGFloat maxSize = 512000;
             if (unsafeImage.size.width > maxSize || unsafeImage.size.height > maxSize) {
                 const CGFloat xscale = MIN(1, maxSize / unsafeImage.size.width);
                 const CGFloat yscale = MIN(1, maxSize / unsafeImage.size.height);
@@ -166,7 +166,8 @@
     if (_cgimage) {
         return (__bridge CGImageRef)_cgimage;
     }
-    _cgimage = [self.image layerContentsForContentsScale:[self.image recommendedLayerContentsScale:2]];
+    CGFloat scale = [self.image recommendedLayerContentsScale:2];
+    _cgimage = [self.image layerContentsForContentsScale:scale];
     return (__bridge CGImageRef)_cgimage;
 }
 

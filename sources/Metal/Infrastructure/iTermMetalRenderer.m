@@ -493,7 +493,7 @@ maximumExtendedDynamicRangeColorComponentValue:(CGFloat)maximumExtendedDynamicRa
                 height:bitmap.size.height
                toWidth:&width
                 height:&height
-          notExceeding:4096];
+          notExceeding:4096000];
     if (width == 0 || height == 0) {
         return nil;
     }

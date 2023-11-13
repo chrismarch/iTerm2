@@ -51,7 +51,7 @@
         // apple's bug.
         {
             DLog(@"Doing it myself");
-            NSBitmapImageRep *bitmap = [[image it_bitmapImageRep] it_bitmapWithAlphaLast];
+            NSBitmapImageRep *bitmap = [[image it_bitmapImageRep:2] it_bitmapWithAlphaLast];
             DLog(@"bitmap=%@ width=%@ height=%@", bitmap, @(bitmap.pixelsWide), @(bitmap.pixelsHigh));
             MTLTextureDescriptor *textureDescriptor =
             [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:[bitmap metalPixelFormat]
@@ -187,7 +187,7 @@
 - (BOOL)setSlice:(NSUInteger)slice withImage:(NSImage *)nsimage {
     ITDebugAssert(slice < _arrayLength);
 
-    NSBitmapImageRep *bitmap = [[nsimage it_verticallyFlippedImage] it_bitmapImageRep];
+    NSBitmapImageRep *bitmap = [[nsimage it_verticallyFlippedImage] it_bitmapImageRep:2];
     if (!bitmap) {
         return NO;
     }

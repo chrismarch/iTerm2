@@ -60,7 +60,7 @@
                                   scale:(CGFloat)scale;
 
 - (NSBitmapImageRep *)bitmapImageRep;  // prefer it_bitmapImageRep
-- (NSBitmapImageRep *)it_bitmapImageRep;  // This is a cleaner method than -bitmapImageRep which won't change the pixel format.
+- (NSBitmapImageRep *)it_bitmapImageRep:(CGFloat)desiredScale;  // This is a cleaner method than -bitmapImageRep which won't change the pixel format.
 - (NSImageRep *)bestRepresentationForScale:(CGFloat)scale;
 - (void)saveAsPNGTo:(NSString *)filename;
 
